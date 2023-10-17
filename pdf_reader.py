@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 # import fitz  # PyMuPDF
 import os
+import toml
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings
 from langchain.vectorstores import FAISS
@@ -14,7 +15,9 @@ from langchain.llms import HuggingFaceHub
 
 
 load_dotenv()
-openai_api_key = os.getenv("OPENAI_API_KEY")
+config = toml.load("config.toml")
+openai_api_key = config["api"]["key"]
+# openai_api_key = os.getenv("OPENAI_API_KEY")
 
 def get_pdf_text(pdf_docs):
     text = ""
