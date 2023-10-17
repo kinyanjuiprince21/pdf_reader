@@ -1,8 +1,8 @@
 import streamlit as st
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 # import fitz  # PyMuPDF
-# import os
+import os
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings, HuggingFaceInstructEmbeddings
 from langchain.vectorstores import FAISS
@@ -11,6 +11,10 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
 from htmlTemplates import css, bot_template, user_template
 from langchain.llms import HuggingFaceHub
+
+
+load_dotenv()
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 def get_pdf_text(pdf_docs):
     text = ""
@@ -50,7 +54,7 @@ def get_text_chunks(text):
 
 def get_vectorstore(text_chunks):
     # Pass the OpenAI API key here
-    embeddings = OpenAIEmbeddings(openai_api_key="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")
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
     vectorstore = FAISS.from_texts(texts=text_chunks, embedding=embeddings)
     return vectorstore
 
@@ -69,7 +73,7 @@ def get_vectorstore(text_chunks):
 
 def get_conversation_chain(vectorstore):
     # Pass the OpenAI API key here
-    llm = ChatOpenAI(openai_api_key="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")
+    llm = ChatOpenAI(openai_api_key=openai_api_key)
     memory = ConversationBufferMemory(
         memory_key='chat_history', return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
@@ -95,7 +99,7 @@ def handle_userinput(user_question):
 
 
 def main():
-    # load_dotenv()
+    load_dotenv()
     st.set_page_config(page_title="Chat with multiple PDFs",
                        page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
