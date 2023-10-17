@@ -15,8 +15,7 @@ from langchain.llms import HuggingFaceHub
 
 
 load_dotenv()
-config = toml.load("config.toml")
-openai_api_key = config["api"]["key"]
+openai_api_key = st.secrets["key"]
 # openai_api_key = os.getenv("OPENAI_API_KEY")
 
 def get_pdf_text(pdf_docs):
